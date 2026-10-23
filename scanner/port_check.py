@@ -14,9 +14,12 @@ def check_port(host, port ):
     except OSError as error:
         return False
 
-    
-result = check_port("127.0.0.1",8000)
-if result : 
-    print("Port is reachable")
-else : 
-    print("could not connect to port")
+host ="127.0.0.1"
+lis = [8000, 8001, 8002]
+
+for i in lis : 
+    result = check_port(host,i)    
+    if result : 
+        print(f"{i} Port is reachable")
+    else : 
+        print(f"{i} could not connect to port")
