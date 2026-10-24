@@ -216,3 +216,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+#new json report files (temporary gitgnr for new generated files )
+*.json 

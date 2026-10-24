@@ -1,6 +1,6 @@
 import socket
-
-
+from datetime import datetime, timezone
+import json
 def check_port(host, port ): 
     try:
         with socket.create_connection((host, port), timeout=2):
@@ -41,6 +41,32 @@ def summarize_results(final_res) :
     summ_res = dict (total_checks = i , succesful = succ , failures = failes )
     return summ_res 
 
+def build_report(results) : 
+    summary = summarize_results(results)
+    report = {
+      "results": results,
+      "summary": summary,
+      "Time": datetime.now(timezone.utc).isoformat(),
+  }
+    return report 
+
+
+def save_report(report, filename) : 
+    json_out = json.dumps(report , indent=2)
+    with open(filename , "w") as f : 
+        f.write(json_out)
+
+def load_report(filename): 
+    try: 
+        with open(filename, "r") as f : 
+                return json.load(f)
+    except FileNotFoundError : 
+                return None 
+    except json.JSONDecodeError : 
+                return None 
+    
+
+
 
 targets = [
     {"host": "127.0.0.1", "ports": [8000, 8001]},
@@ -48,5 +74,10 @@ targets = [
 ]
 
 results = scan_targets(targets)
-print(results)
-print(summarize_results (results))
+print("Results : ",results)
+print("summary : ",summarize_results (results))
+rep = build_report(results)
+print("Report : ",rep)
+save_report(rep,"rep.json")
+loaded_data = load_report("rep.json")
+print("Loaded:", loaded_data)
