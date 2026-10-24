@@ -20,5 +20,33 @@ def scan_host(host, ports):
         result.append(dictionary)
     return result
 
-results = scan_host("127.0.0.1", [8000, 8001, 8002])
+def scan_targets(targets): 
+    final_res = []
+    for i in targets: 
+        res = scan_host(i["host"],i["ports"])
+        final_res.extend(res)
+    return final_res
+
+
+def summarize_results(final_res) : 
+    i=0
+    succ = 0 
+    failes = 0 
+    for result in final_res : 
+        i += 1 
+        if result ["reachable"] == True : 
+            succ += 1 
+        else : 
+            failes += 1 
+    summ_res = dict (total_checks = i , succesful = succ , failures = failes )
+    return summ_res 
+
+
+targets = [
+    {"host": "127.0.0.1", "ports": [8000, 8001]},
+    {"host": "127.0.0.1", "ports": [8002]}
+]
+
+results = scan_targets(targets)
 print(results)
+print(summarize_results (results))
